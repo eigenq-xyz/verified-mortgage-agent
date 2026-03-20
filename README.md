@@ -2,7 +2,7 @@
 
 LLM-orchestrated mortgage application processing with Lean 4 formal verification of routing decisions.
 
-A LangGraph multi-agent system processes mortgage applications through specialized roles (intake, risk, compliance, underwriter). Every routing decision is recorded in a structured execution trace, which is then validated against formal invariants written in Lean 4.
+A LangGraph multi-agent system processes mortgage applications through specialized roles (intake, risk, compliance, underwriter). Every routing decision is recorded in a structured decision record, which is then validated against formal invariants written in Lean 4.
 
 ## Architecture
 
@@ -17,7 +17,7 @@ LangGraph Orchestrator
     └── UnderwriterAgent     — final decision
     │
     ▼
-ExecutionTrace (JSON)
+DecisionRecord (JSON)
     │
     ▼
 Lean 4 Checker (lake exe verify-trace)
@@ -45,10 +45,10 @@ make lean-build   # build the Lean verifier
 # Process an application end-to-end
 vma process path/to/application.json
 
-# Only run the Lean verifier on an existing trace
-vma verify path/to/trace.json
+# Only run the Lean verifier on an existing decision record
+vma verify path/to/record.json
 
-# Print the JSON Schema for ExecutionTrace
+# Print the JSON Schema for DecisionRecord
 vma schema dump
 ```
 
@@ -67,5 +67,5 @@ uvicorn verified_mortgage_agent.app.api:app --reload
 make lint       # ruff + mypy
 make test       # unit tests (mocked LLM + Lean)
 make test-all   # includes integration tests (requires live credentials)
-make schema     # regenerate schemas/execution_trace.json
+make schema     # regenerate schemas/decision_record.json
 ```

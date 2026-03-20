@@ -336,11 +336,11 @@
       "type": "string"
     }
   },
-  "description": "Complete record of all decisions made while processing one application.\n\n`decisions` is what Lean formally verifies.\n`orchestration_trace` records inter-agent routing steps (auditable, not formally proven).",
+  "description": "Complete record of all decisions made while processing one application.\n\n`decisions` is what Lean formally verifies.\n`routing_steps` records inter-agent routing steps (auditable, not formally proven).",
   "properties": {
-    "trace_id": {
+    "record_id": {
       "format": "uuid",
-      "title": "Trace Id",
+      "title": "Record Id",
       "type": "string"
     },
     "schema_version": {
@@ -358,11 +358,11 @@
       "title": "Decisions",
       "type": "array"
     },
-    "orchestration_trace": {
+    "routing_steps": {
       "items": {
         "$ref": "#/$defs/ReasoningStep"
       },
-      "title": "Orchestration Trace",
+      "title": "Routing Steps",
       "type": "array"
     },
     "final_outcome": {
@@ -383,6 +383,6 @@
     "final_outcome",
     "model_id"
   ],
-  "title": "ExecutionTrace",
+  "title": "DecisionRecord",
   "type": "object"
 }

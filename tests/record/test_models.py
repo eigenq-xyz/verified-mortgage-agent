@@ -3,9 +3,9 @@ from datetime import datetime
 from decimal import Decimal
 
 from verified_mortgage_agent.domain.enums import LoanType, RoutingOutcome
-from verified_mortgage_agent.trace.models import (
+from verified_mortgage_agent.record.models import (
     SCHEMA_VERSION,
-    ExecutionTrace,
+    DecisionRecord,
     ReasoningStep,
     RoutingDecision,
 )
@@ -31,7 +31,7 @@ def test_routing_decision_requires_model_id(
     assert decision.decided_at is not None
 
 
-def test_execution_trace_schema_version(
+def test_decision_record_schema_version(
     application_approvable,  # type: ignore[no-untyped-def]
 ) -> None:
     decision = RoutingDecision(
@@ -41,20 +41,20 @@ def test_execution_trace_schema_version(
         confidence_score=0.9,
         model_id="anthropic/claude-sonnet-4-6",
     )
-    trace = ExecutionTrace(
+    record = DecisionRecord(
         application=application_approvable,
         decisions=[decision],
         final_outcome=RoutingOutcome.APPROVE,
         model_id="anthropic/claude-sonnet-4-6",
     )
-    assert trace.schema_version == SCHEMA_VERSION
-    assert trace.trace_id is not None
+    assert record.schema_version == SCHEMA_VERSION
+    assert record.record_id is not None
 
 
-def test_trace_serialization_roundtrip(
+def test_record_serialization_roundtrip(
     application_approvable,  # type: ignore[no-untyped-def]
 ) -> None:
-    from verified_mortgage_agent.trace.io import loads, serialize
+    from verified_mortgage_agent.record.io import loads, serialize
 
     decision = RoutingDecision(
         application_id=application_approvable.id,
@@ -63,13 +63,13 @@ def test_trace_serialization_roundtrip(
         confidence_score=0.9,
         model_id="anthropic/claude-sonnet-4-6",
     )
-    trace = ExecutionTrace(
+    record = DecisionRecord(
         application=application_approvable,
         decisions=[decision],
         final_outcome=RoutingOutcome.APPROVE,
         model_id="anthropic/claude-sonnet-4-6",
     )
-    roundtripped = loads(serialize(trace))
-    assert roundtripped.trace_id == trace.trace_id
+    roundtripped = loads(serialize(record))
+    assert roundtripped.record_id == record.record_id
     assert roundtripped.final_outcome == RoutingOutcome.APPROVE
     assert len(roundtripped.decisions) == 1
