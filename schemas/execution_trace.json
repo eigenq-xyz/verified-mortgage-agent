@@ -1,0 +1,388 @@
+{
+  "$defs": {
+    "Applicant": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "annual_income_usd": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "title": "Annual Income Usd"
+        },
+        "credit_score": {
+          "maximum": 850,
+          "minimum": 300,
+          "title": "Credit Score",
+          "type": "integer"
+        },
+        "employment_status": {
+          "$ref": "#/$defs/EmploymentStatus"
+        },
+        "debt_obligations_monthly_usd": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "title": "Debt Obligations Monthly Usd"
+        }
+      },
+      "required": [
+        "name",
+        "annual_income_usd",
+        "credit_score",
+        "employment_status",
+        "debt_obligations_monthly_usd"
+      ],
+      "title": "Applicant",
+      "type": "object"
+    },
+    "DocumentType": {
+      "enum": [
+        "BANK_STATEMENT",
+        "TAX_RETURN",
+        "EMPLOYMENT_VERIFICATION",
+        "APPRAISAL",
+        "CREDIT_REPORT",
+        "PAY_STUB",
+        "GOVERNMENT_ID"
+      ],
+      "title": "DocumentType",
+      "type": "string"
+    },
+    "EmploymentStatus": {
+      "enum": [
+        "EMPLOYED",
+        "SELF_EMPLOYED",
+        "RETIRED",
+        "UNEMPLOYED"
+      ],
+      "title": "EmploymentStatus",
+      "type": "string"
+    },
+    "LoanRequest": {
+      "properties": {
+        "principal_usd": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "title": "Principal Usd"
+        },
+        "term_years": {
+          "maximum": 30,
+          "minimum": 1,
+          "title": "Term Years",
+          "type": "integer"
+        },
+        "loan_type": {
+          "$ref": "#/$defs/LoanType"
+        },
+        "requested_rate_pct": {
+          "anyOf": [
+            {
+              "maximum": 100.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Requested Rate Pct"
+        }
+      },
+      "required": [
+        "principal_usd",
+        "term_years",
+        "loan_type"
+      ],
+      "title": "LoanRequest",
+      "type": "object"
+    },
+    "LoanType": {
+      "enum": [
+        "CONVENTIONAL",
+        "FHA",
+        "VA",
+        "JUMBO"
+      ],
+      "title": "LoanType",
+      "type": "string"
+    },
+    "MortgageApplication": {
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "applicant": {
+          "$ref": "#/$defs/Applicant"
+        },
+        "property": {
+          "$ref": "#/$defs/Property"
+        },
+        "loan": {
+          "$ref": "#/$defs/LoanRequest"
+        },
+        "submitted_at": {
+          "format": "date-time",
+          "title": "Submitted At",
+          "type": "string"
+        },
+        "provided_documents": {
+          "items": {
+            "$ref": "#/$defs/DocumentType"
+          },
+          "title": "Provided Documents",
+          "type": "array"
+        }
+      },
+      "required": [
+        "applicant",
+        "property",
+        "loan"
+      ],
+      "title": "MortgageApplication",
+      "type": "object"
+    },
+    "Property": {
+      "properties": {
+        "address": {
+          "title": "Address",
+          "type": "string"
+        },
+        "appraised_value_usd": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "title": "Appraised Value Usd"
+        },
+        "property_type": {
+          "$ref": "#/$defs/PropertyType"
+        }
+      },
+      "required": [
+        "address",
+        "appraised_value_usd",
+        "property_type"
+      ],
+      "title": "Property",
+      "type": "object"
+    },
+    "PropertyType": {
+      "enum": [
+        "SINGLE_FAMILY",
+        "CONDO",
+        "MULTI_FAMILY",
+        "COMMERCIAL"
+      ],
+      "title": "PropertyType",
+      "type": "string"
+    },
+    "ReasoningStep": {
+      "description": "A single step in an agent's reasoning chain.",
+      "properties": {
+        "step_index": {
+          "minimum": 0,
+          "title": "Step Index",
+          "type": "integer"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "inputs_considered": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Inputs Considered",
+          "type": "array"
+        },
+        "rule_cited": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rule Cited"
+        }
+      },
+      "required": [
+        "step_index",
+        "description"
+      ],
+      "title": "ReasoningStep",
+      "type": "object"
+    },
+    "RoutingDecision": {
+      "description": "A single agent's routing decision, including its full reasoning chain.",
+      "properties": {
+        "decision_id": {
+          "format": "uuid",
+          "title": "Decision Id",
+          "type": "string"
+        },
+        "application_id": {
+          "format": "uuid",
+          "title": "Application Id",
+          "type": "string"
+        },
+        "agent_name": {
+          "title": "Agent Name",
+          "type": "string"
+        },
+        "outcome": {
+          "$ref": "#/$defs/RoutingOutcome"
+        },
+        "reasoning_steps": {
+          "items": {
+            "$ref": "#/$defs/ReasoningStep"
+          },
+          "title": "Reasoning Steps",
+          "type": "array"
+        },
+        "confidence_score": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence Score",
+          "type": "number"
+        },
+        "documents_requested": {
+          "items": {
+            "$ref": "#/$defs/DocumentType"
+          },
+          "title": "Documents Requested",
+          "type": "array"
+        },
+        "escalation_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Escalation Reason"
+        },
+        "decided_at": {
+          "format": "date-time",
+          "title": "Decided At",
+          "type": "string"
+        },
+        "model_id": {
+          "title": "Model Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "application_id",
+        "agent_name",
+        "outcome",
+        "confidence_score",
+        "model_id"
+      ],
+      "title": "RoutingDecision",
+      "type": "object"
+    },
+    "RoutingOutcome": {
+      "enum": [
+        "APPROVE",
+        "REJECT",
+        "REQUEST_DOCUMENTS",
+        "ESCALATE_TO_UNDERWRITER"
+      ],
+      "title": "RoutingOutcome",
+      "type": "string"
+    }
+  },
+  "description": "Complete record of all decisions made while processing one application.\n\n`decisions` is what Lean formally verifies.\n`orchestration_trace` records inter-agent routing steps (auditable, not formally proven).",
+  "properties": {
+    "trace_id": {
+      "format": "uuid",
+      "title": "Trace Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "application": {
+      "$ref": "#/$defs/MortgageApplication"
+    },
+    "decisions": {
+      "items": {
+        "$ref": "#/$defs/RoutingDecision"
+      },
+      "title": "Decisions",
+      "type": "array"
+    },
+    "orchestration_trace": {
+      "items": {
+        "$ref": "#/$defs/ReasoningStep"
+      },
+      "title": "Orchestration Trace",
+      "type": "array"
+    },
+    "final_outcome": {
+      "$ref": "#/$defs/RoutingOutcome"
+    },
+    "generated_at": {
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "model_id": {
+      "title": "Model Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "application",
+    "final_outcome",
+    "model_id"
+  ],
+  "title": "ExecutionTrace",
+  "type": "object"
+}
