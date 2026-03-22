@@ -9,7 +9,6 @@ Commands:
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
 import typer
@@ -23,13 +22,13 @@ app = typer.Typer(
 
 @app.command()
 def process(
-    application_path: Path = typer.Argument(
+    application_path: Path = typer.Argument(  # noqa: B008
         ..., help="Path to a MortgageApplication JSON file.", exists=True
     ),
-    output: Path = typer.Option(
+    output: Path = typer.Option(  # noqa: B008
         None, "--output", "-o", help="Write DecisionRecord JSON to this path."
     ),
-    skip_verify: bool = typer.Option(
+    skip_verify: bool = typer.Option(  # noqa: B008
         False, "--skip-verify", help="Skip Lean verification step."
     ),
 ) -> None:
@@ -52,7 +51,7 @@ def process(
         application = MortgageApplication.model_validate(raw)
     except Exception as exc:
         typer.echo(f"ERROR: Invalid application JSON: {exc}", err=True)
-        raise typer.Exit(1)
+        raise typer.Exit(1) from exc
 
     typer.echo("Running orchestrator …")
     record = run_sync(application)
@@ -86,7 +85,7 @@ def process(
 
 @app.command()
 def verify(
-    record_path: Path = typer.Argument(
+    record_path: Path = typer.Argument(  # noqa: B008
         ..., help="Path to a DecisionRecord JSON file.", exists=True
     ),
 ) -> None:
@@ -101,10 +100,10 @@ def verify(
         result = verify_file(record_path)
     except LeanBinaryNotFoundError as exc:
         typer.echo(f"ERROR: {exc}", err=True)
-        raise typer.Exit(2)
+        raise typer.Exit(2) from exc
     except LeanVerifierError as exc:
         typer.echo(f"ERROR: {exc}", err=True)
-        raise typer.Exit(2)
+        raise typer.Exit(2) from exc
 
     if result.ok:
         typer.echo("✓ All invariants passed.")
@@ -121,7 +120,7 @@ app.add_typer(schema_app, name="schema")
 
 @schema_app.command("dump")
 def schema_dump(
-    output: Path = typer.Option(
+    output: Path = typer.Option(  # noqa: B008
         None, "--output", "-o", help="Write to file instead of stdout."
     ),
 ) -> None:

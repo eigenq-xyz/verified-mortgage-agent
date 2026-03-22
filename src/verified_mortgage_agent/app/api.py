@@ -9,8 +9,6 @@ Endpoints:
 
 from __future__ import annotations
 
-from pathlib import Path
-
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
@@ -91,8 +89,8 @@ def verify_record(request: VerifyRequest) -> VerifyResponse:
     try:
         result = verify(request.record)
     except LeanBinaryNotFoundError as exc:
-        raise HTTPException(status_code=503, detail=str(exc))
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
     except LeanVerifierError as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
 
     return VerifyResponse(verification=result)

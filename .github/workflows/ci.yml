@@ -72,10 +72,12 @@ jobs:
       - name: Smoke test — DTI violation is detected
         run: |
           cd lean
-          lake exe verify-trace ../tests/fixtures/sample_record_dti_violation.json; \
-            code=$?; \
-            [ $code -eq 1 ] && echo "PASS: violation correctly detected" || \
-              (echo "FAIL: expected exit code 1, got $code" && exit 1)
+          set +e
+          lake exe verify-trace ../tests/fixtures/sample_record_dti_violation.json
+          code=$?
+          set -e
+          [ "$code" -eq 1 ] && echo "PASS: violation correctly detected" || \
+            { echo "FAIL: expected exit code 1, got $code"; exit 1; }
 
   integration:
     name: Integration tests (Lean binary + live LLM)
