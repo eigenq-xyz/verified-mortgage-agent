@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
+from typing import cast
 
 from langchain_core.messages import HumanMessage, SystemMessage
 
@@ -29,7 +30,7 @@ def compliance_node(state: GraphState) -> dict:  # type: ignore[type-arg]
     )
 
     llm = get_llm(AGENT_NAME).with_structured_output(AgentResponse)
-    response: AgentResponse = llm.invoke([
+    response = cast(AgentResponse, llm.invoke([
         SystemMessage(content=COMPLIANCE_SYSTEM),
         HumanMessage(content=COMPLIANCE_HUMAN.format(
             applicant_name=app.applicant.name,
@@ -41,7 +42,7 @@ def compliance_node(state: GraphState) -> dict:  # type: ignore[type-arg]
             property_type=app.property.property_type.value,
             property_address=app.property.address,
         )),
-    ])
+    ]))
 
     decision = RoutingDecision(
         application_id=app.id,

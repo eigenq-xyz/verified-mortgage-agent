@@ -11,7 +11,7 @@ Graph flow:
 from __future__ import annotations
 
 from datetime import UTC, datetime
-from typing import Union
+from typing import Any, Union
 
 from langgraph.graph import END, StateGraph
 from langgraph.types import Send
@@ -66,7 +66,7 @@ def _assemble_record(state: GraphState) -> dict:  # type: ignore[type-arg]
     return {"final_outcome": final_outcome, "_record": record}
 
 
-def build_graph() -> StateGraph:
+def build_graph() -> Any:
     """Construct the mortgage orchestrator graph (not yet compiled)."""
     graph = StateGraph(GraphState)
 
@@ -104,6 +104,6 @@ def build_graph() -> StateGraph:
     return graph
 
 
-def compile_graph():  # type: ignore[no-untyped-def]
+def compile_graph() -> Any:
     """Build and compile the graph for execution."""
     return build_graph().compile()

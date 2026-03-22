@@ -55,7 +55,7 @@ class MortgageApplication(BaseModel):
     submitted_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     provided_documents: list[DocumentType] = Field(default_factory=list)
 
-    @property
+    @property  # type: ignore[operator]
     def debt_to_income_ratio(self) -> Decimal:
         """Monthly debt obligations divided by monthly gross income."""
         monthly_income = self.applicant.monthly_income_usd
@@ -63,7 +63,7 @@ class MortgageApplication(BaseModel):
             return Decimal("999")
         return self.applicant.debt_obligations_monthly_usd / monthly_income
 
-    @property
+    @property  # type: ignore[operator]
     def loan_to_value_ratio(self) -> Decimal:
         """Loan principal divided by property appraised value."""
         appraised = self.property.appraised_value_usd

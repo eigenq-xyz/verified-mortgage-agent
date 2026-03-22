@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
+from typing import cast
 
 from langchain_core.messages import HumanMessage, SystemMessage
 
@@ -36,7 +37,7 @@ def underwriter_node(state: GraphState) -> dict:  # type: ignore[type-arg]
     app = state["application"]
 
     llm = get_llm(AGENT_NAME).with_structured_output(AgentResponse)
-    response: AgentResponse = llm.invoke([
+    response = cast(AgentResponse, llm.invoke([
         SystemMessage(content=UNDERWRITER_SYSTEM),
         HumanMessage(content=UNDERWRITER_HUMAN.format(
             application_id=str(app.id),
@@ -48,7 +49,7 @@ def underwriter_node(state: GraphState) -> dict:  # type: ignore[type-arg]
             ltv=float(app.loan_to_value_ratio),
             credit_score=app.applicant.credit_score,
         )),
-    ])
+    ]))
 
     decision = RoutingDecision(
         application_id=app.id,

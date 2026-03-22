@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
+from typing import cast
 
 from langchain_core.messages import HumanMessage, SystemMessage
 
@@ -26,7 +27,7 @@ def risk_node(state: GraphState) -> dict:  # type: ignore[type-arg]
     loan_type = app.loan.loan_type
 
     llm = get_llm(AGENT_NAME).with_structured_output(AgentResponse)
-    response: AgentResponse = llm.invoke([
+    response = cast(AgentResponse, llm.invoke([
         SystemMessage(content=RISK_SYSTEM),
         HumanMessage(content=RISK_HUMAN.format(
             applicant_name=app.applicant.name,
@@ -43,7 +44,7 @@ def risk_node(state: GraphState) -> dict:  # type: ignore[type-arg]
             ltv_cap=ltv_cap(loan_type),
             credit_min=credit_score_min(loan_type),
         )),
-    ])
+    ]))
 
     decision = RoutingDecision(
         application_id=app.id,

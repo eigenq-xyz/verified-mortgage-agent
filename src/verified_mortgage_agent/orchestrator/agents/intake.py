@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
+from typing import cast
 
 from langchain_core.messages import HumanMessage, SystemMessage
 
@@ -24,7 +25,7 @@ def intake_node(state: GraphState) -> dict:  # type: ignore[type-arg]
     required = REQUIRED_DOCUMENTS.get(loan_type, [])
 
     llm = get_llm(AGENT_NAME).with_structured_output(AgentResponse)
-    response: AgentResponse = llm.invoke([
+    response = cast(AgentResponse, llm.invoke([
         SystemMessage(content=INTAKE_SYSTEM),
         HumanMessage(content=INTAKE_HUMAN.format(
             loan_type=loan_type.value,
@@ -33,7 +34,7 @@ def intake_node(state: GraphState) -> dict:  # type: ignore[type-arg]
             applicant_name=app.applicant.name,
             application_id=str(app.id),
         )),
-    ])
+    ]))
 
     decision = RoutingDecision(
         application_id=app.id,
