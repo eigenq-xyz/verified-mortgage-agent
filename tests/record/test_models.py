@@ -1,8 +1,5 @@
-import uuid
-from datetime import datetime
-from decimal import Decimal
 
-from verified_mortgage_agent.domain.enums import LoanType, RoutingOutcome
+from verified_mortgage_agent.domain.enums import RoutingOutcome
 from verified_mortgage_agent.record.models import (
     SCHEMA_VERSION,
     DecisionRecord,

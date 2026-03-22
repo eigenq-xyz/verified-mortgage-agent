@@ -7,7 +7,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
-from verified_mortgage_agent.record.models import DecisionRecord, SCHEMA_VERSION
+from verified_mortgage_agent.record.models import SCHEMA_VERSION, DecisionRecord
 
 
 class RecordSchemaVersionError(Exception):

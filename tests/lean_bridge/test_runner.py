@@ -9,7 +9,6 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from verified_mortgage_agent.domain.enums import RoutingOutcome
-from verified_mortgage_agent.lean_bridge.result import VerificationResult, Violation
 from verified_mortgage_agent.lean_bridge.runner import (
     LeanBinaryNotFoundError,
     LeanVerifierError,

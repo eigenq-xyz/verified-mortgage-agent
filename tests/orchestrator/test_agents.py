@@ -2,17 +2,17 @@
 
 from __future__ import annotations
 
-from decimal import Decimal
 from unittest.mock import MagicMock, patch
-
-import pytest
 
 from verified_mortgage_agent.domain.enums import DocumentType, RoutingOutcome
 from verified_mortgage_agent.orchestrator.agents.compliance import compliance_node
 from verified_mortgage_agent.orchestrator.agents.intake import intake_node
 from verified_mortgage_agent.orchestrator.agents.risk import risk_node
 from verified_mortgage_agent.orchestrator.agents.underwriter import underwriter_node
-from verified_mortgage_agent.orchestrator.tools import AgentResponse, ReasoningStepOutput
+from verified_mortgage_agent.orchestrator.tools import (
+    AgentResponse,
+    ReasoningStepOutput,
+)
 
 
 def _make_llm_mock(outcome: RoutingOutcome, **kwargs) -> MagicMock:  # type: ignore[no-untyped-def]

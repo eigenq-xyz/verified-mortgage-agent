@@ -2,10 +2,6 @@
 
 from __future__ import annotations
 
-from decimal import Decimal
-
-import pytest
-
 from verified_mortgage_agent.domain.enums import RoutingOutcome
 from verified_mortgage_agent.orchestrator.agents.router import (
     route_after_analysis,
