@@ -1,4 +1,4 @@
-"""Execution trace models — the cross-system contract between Python and Lean 4.
+"""Decision record models — the cross-system contract between Python and Lean 4.
 
 These types are serialized to JSON and consumed by `lake exe verify-trace`.
 Any schema change requires a version bump in SCHEMA_VERSION and a corresponding
@@ -45,20 +45,20 @@ class RoutingDecision(BaseModel):
     model_id: str
 
 
-class ExecutionTrace(BaseModel):
+class DecisionRecord(BaseModel):
     """Complete record of all decisions made while processing one application.
 
     `decisions` is what Lean formally verifies.
-    `orchestration_trace` records inter-agent routing steps (auditable, not formally proven).
+    `routing_steps` records inter-agent routing steps (auditable, not formally proven).
     """
 
-    trace_id: uuid.UUID = Field(default_factory=uuid.uuid4)
+    record_id: uuid.UUID = Field(default_factory=uuid.uuid4)
     # Bump when the schema changes; Lean rejects mismatched versions with exit code 2
     schema_version: str = SCHEMA_VERSION
     application: MortgageApplication
     decisions: list[RoutingDecision] = Field(default_factory=list)
     # Router reasoning steps — separate from formally-verified decisions
-    orchestration_trace: list[ReasoningStep] = Field(default_factory=list)
+    routing_steps: list[ReasoningStep] = Field(default_factory=list)
     final_outcome: RoutingOutcome
     generated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     # Model used by the authoritative (underwriter) agent

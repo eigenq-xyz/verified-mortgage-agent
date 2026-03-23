@@ -1,9 +1,14 @@
 from decimal import Decimal
 
 import pytest
+from pydantic import ValidationError
 
 from verified_mortgage_agent.domain.enums import EmploymentStatus, LoanType
-from verified_mortgage_agent.domain.models import Applicant, LoanRequest, MortgageApplication
+from verified_mortgage_agent.domain.models import (
+    Applicant,
+    LoanRequest,
+    MortgageApplication,
+)
 
 
 def test_monthly_income(applicant_good: Applicant) -> None:
@@ -21,7 +26,7 @@ def test_ltv_ratio(application_approvable: MortgageApplication) -> None:
 
 
 def test_credit_score_bounds() -> None:
-    with pytest.raises(Exception):
+    with pytest.raises(ValidationError):
         Applicant(
             name="X",
             annual_income_usd=Decimal("100000"),
@@ -29,7 +34,7 @@ def test_credit_score_bounds() -> None:
             employment_status=EmploymentStatus.EMPLOYED,
             debt_obligations_monthly_usd=Decimal("0"),
         )
-    with pytest.raises(Exception):
+    with pytest.raises(ValidationError):
         Applicant(
             name="X",
             annual_income_usd=Decimal("100000"),
@@ -40,7 +45,7 @@ def test_credit_score_bounds() -> None:
 
 
 def test_loan_term_validation() -> None:
-    with pytest.raises(Exception):
+    with pytest.raises(ValidationError):
         LoanRequest(
             principal_usd=Decimal("300000"),
             term_years=7,

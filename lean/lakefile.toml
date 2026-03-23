@@ -1,0 +1,10 @@
+name = "MortgageVerifier"
+version = "0.1.0"
+description = "Formal verification of LLM mortgage routing decisions"
+
+[[lean_lib]]
+name = "MortgageVerifier"
+
+[[lean_exe]]
+name = "verify-trace"
+root = "Main"

@@ -17,9 +17,9 @@ schema:
 	uv run python scripts/generate_schema.py
 
 lean-build:
-	cd lean && lake build
+	cd lean && lake build MortgageVerifier && lake build verify-trace
 
 lean-test:
-	cd lean && lake exe verify-trace -- ../tests/fixtures/sample_trace_valid.json
-	cd lean && lake exe verify-trace -- ../tests/fixtures/sample_trace_dti_violation.json; \
+	cd lean && lake exe verify-trace ../tests/fixtures/sample_record_valid.json
+	cd lean && lake exe verify-trace ../tests/fixtures/sample_record_dti_violation.json; \
 		[ $$? -eq 1 ] && echo "PASS: violation correctly detected" || echo "FAIL: expected exit code 1"
