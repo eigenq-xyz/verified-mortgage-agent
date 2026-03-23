@@ -238,7 +238,9 @@ def test_predatory_fixture(
             f"Expected Lean to FAIL {fixture_name} but it passed.\n\n"
             f"Legal basis: {legal_basis}"
         )
-        violation_text = " ".join(result.violations).lower()
+        violation_text = " ".join(
+            f"{v.invariant_name} {v.description}" for v in result.violations
+        ).lower()
         for substring in expected_violation_substrings:
             assert substring.lower() in violation_text, (
                 f"Expected violation containing {substring!r} in {fixture_name}.\n"

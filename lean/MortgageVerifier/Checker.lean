@@ -32,12 +32,26 @@ structure CheckResult where
 -- ---------------------------------------------------------------------------
 
 private def violationName (msg : String) : String :=
-  if msg.startsWith "DTI"           then "dti_cap"
-  else if msg.startsWith "LTV"      then "ltv_cap"
-  else if msg.startsWith "Credit"   then "credit_floor"
-  else if msg.startsWith "ESCALATE" then "escalation_requires_reason"
+  if msg.startsWith "DTI" then
+    if msg.contains "CONVENTIONAL" then "dtiCapConventional"
+    else if msg.contains "FHA"     then "dtiCapFHA"
+    else if msg.contains "VA"      then "dtiCapVA"
+    else if msg.contains "JUMBO"   then "dtiCapJumbo"
+    else "dtiCap"
+  else if msg.startsWith "LTV" then
+    if msg.contains "CONVENTIONAL" then "ltvCapConventional"
+    else if msg.contains "FHA"     then "ltvCapFHA"
+    else if msg.contains "JUMBO"   then "ltvCapJumbo"
+    else "ltvCap"
+  else if msg.startsWith "Credit" then
+    if msg.contains "CONVENTIONAL" then "creditFloorConventional"
+    else if msg.contains "FHA"     then "creditFloorFHA"
+    else if msg.contains "VA"      then "creditFloorVA"
+    else if msg.contains "JUMBO"   then "creditFloorJumbo"
+    else "creditFloor"
+  else if msg.startsWith "ESCALATE" then "escalationRequiresReason"
   else if msg.startsWith "final_outcome" || msg.startsWith "Record has no"
-                                    then "final_outcome_consistency"
+                                    then "finalOutcomeConsistency"
   else "unknown_invariant"
 
 -- ---------------------------------------------------------------------------
