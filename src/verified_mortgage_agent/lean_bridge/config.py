@@ -10,8 +10,9 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-# Walk up from this file to the repo root
-_REPO_ROOT = Path(__file__).parents[4]
+# Walk up from this file to the repo root:
+# config.py → lean_bridge/ → verified_mortgage_agent/ → src/ → repo root
+_REPO_ROOT = Path(__file__).parents[3]
 _DEFAULT_BIN = _REPO_ROOT / "lean" / ".lake" / "build" / "bin" / "verify-trace"
 
 
