@@ -31,23 +31,28 @@ structure CheckResult where
 -- Violation name extraction from message prefix
 -- ---------------------------------------------------------------------------
 
+-- String.contains in Lean 4 core takes a Char, not a String.
+-- Use splitOn to check for a substring: if sub is present, splitOn yields ≥ 2 parts.
+private def strHas (s sub : String) : Bool :=
+  (s.splitOn sub).length > 1
+
 private def violationName (msg : String) : String :=
   if msg.startsWith "DTI" then
-    if msg.contains "CONVENTIONAL" then "dtiCapConventional"
-    else if msg.contains "FHA"     then "dtiCapFHA"
-    else if msg.contains "VA"      then "dtiCapVA"
-    else if msg.contains "JUMBO"   then "dtiCapJumbo"
+    if strHas msg "CONVENTIONAL" then "dtiCapConventional"
+    else if strHas msg "FHA"     then "dtiCapFHA"
+    else if strHas msg "VA"      then "dtiCapVA"
+    else if strHas msg "JUMBO"   then "dtiCapJumbo"
     else "dtiCap"
   else if msg.startsWith "LTV" then
-    if msg.contains "CONVENTIONAL" then "ltvCapConventional"
-    else if msg.contains "FHA"     then "ltvCapFHA"
-    else if msg.contains "JUMBO"   then "ltvCapJumbo"
+    if strHas msg "CONVENTIONAL" then "ltvCapConventional"
+    else if strHas msg "FHA"     then "ltvCapFHA"
+    else if strHas msg "JUMBO"   then "ltvCapJumbo"
     else "ltvCap"
   else if msg.startsWith "Credit" then
-    if msg.contains "CONVENTIONAL" then "creditFloorConventional"
-    else if msg.contains "FHA"     then "creditFloorFHA"
-    else if msg.contains "VA"      then "creditFloorVA"
-    else if msg.contains "JUMBO"   then "creditFloorJumbo"
+    if strHas msg "CONVENTIONAL" then "creditFloorConventional"
+    else if strHas msg "FHA"     then "creditFloorFHA"
+    else if strHas msg "VA"      then "creditFloorVA"
+    else if strHas msg "JUMBO"   then "creditFloorJumbo"
     else "creditFloor"
   else if msg.startsWith "ESCALATE" then "escalationRequiresReason"
   else if msg.startsWith "final_outcome" || msg.startsWith "Record has no"
