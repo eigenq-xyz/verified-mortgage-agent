@@ -16,11 +16,19 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+from verified_mortgage_agent.domain.models import (
+    ApplicantSituation,
+    MortgageGoal,
+    MortgagePackageProposal,
+)
 from verified_mortgage_agent.lean_bridge.config import (
     get_binary_path,
     get_timeout_seconds,
 )
 from verified_mortgage_agent.lean_bridge.result import VerificationResult, Violation
+from verified_mortgage_agent.lean_bridge.synthesis import (
+    synthesize_record_from_proposal,
+)
 from verified_mortgage_agent.record.io import serialize
 from verified_mortgage_agent.record.models import DecisionRecord
 
@@ -99,6 +107,21 @@ def verify_file(path: Path) -> VerificationResult:
         )
 
     return _parse_output(proc.stdout)
+
+
+def verify_proposal(
+    proposal: MortgagePackageProposal,
+    situation: ApplicantSituation,
+    goal: MortgageGoal,
+) -> VerificationResult:
+    """Synthesise a v1 record from *proposal* and run the existing verify().
+
+    The Lean binary never sees a DesignSessionRecord.  Python wraps the
+    proposal as a minimal v1 DecisionRecord (outcome=APPROVE, schema 1.0.0)
+    and passes it through the unchanged ``verify-trace`` binary.
+    """
+    record = synthesize_record_from_proposal(proposal, situation, goal)
+    return verify(record)
 
 
 def _parse_output(stdout: str) -> VerificationResult:

@@ -1,0 +1,32 @@
+{
+  "record_id": "aaaaaaaa-aaaa-aaaa-aaaa-aa0000000009",
+  "schema_version": "1.0.0",
+  "application": {
+    "id": "bbbbbbbb-bbbb-bbbb-bbbb-bb0000000009",
+    "applicant": {
+      "name": "Emma Empty",
+      "annual_income_usd": "120000",
+      "credit_score": 740,
+      "employment_status": "EMPLOYED",
+      "debt_obligations_monthly_usd": "1200"
+    },
+    "property": {
+      "address": "9 Empty End",
+      "appraised_value_usd": "400000",
+      "property_type": "SINGLE_FAMILY"
+    },
+    "loan": {
+      "principal_usd": "320000",
+      "term_years": 30,
+      "loan_type": "CONVENTIONAL",
+      "requested_rate_pct": null
+    },
+    "submitted_at": "2026-01-15T10:00:00.000000Z",
+    "provided_documents": ["GOVERNMENT_ID", "PAY_STUB", "TAX_RETURN", "BANK_STATEMENT"]
+  },
+  "decisions": [],
+  "routing_steps": [],
+  "final_outcome": "APPROVE",
+  "generated_at": "2026-01-15T10:00:01.000000Z",
+  "model_id": "anthropic/claude-sonnet-4-6"
+}
