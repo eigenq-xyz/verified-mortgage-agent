@@ -112,7 +112,7 @@ def _parse_output(stdout: str) -> VerificationResult:
 
     violations = [
         Violation(
-            invariant_name=v.get("invariantName", "unknown"),
+            invariant_name=v.get("invariant_name", "unknown"),
             description=v.get("description", ""),
             severity=v.get("severity", "error"),
         )
@@ -121,8 +121,8 @@ def _parse_output(stdout: str) -> VerificationResult:
 
     return VerificationResult(
         passed=data.get("passed", False),
-        record_id=data.get("recordId", ""),
+        record_id=data.get("record_id", ""),
         violations=violations,
-        lean_version=data.get("leanVersion", ""),
+        lean_version=data.get("lean_version", ""),
         raw=data,
     )

@@ -37,7 +37,7 @@ def _make_record(application_approvable, outcome: RoutingOutcome) -> DecisionRec
 # ── _parse_output ────────────────────────────────────────────────────────────
 
 def test_parse_output_passed() -> None:
-    data = {"passed": True, "recordId": "abc-123", "violations": [], "leanVersion": "4.26.0"}
+    data = {"passed": True, "record_id": "abc-123", "violations": [], "lean_version": "4.26.0"}
     result = _parse_output(json.dumps(data))
     assert result.passed is True
     assert result.ok is True
@@ -47,11 +47,11 @@ def test_parse_output_passed() -> None:
 def test_parse_output_violations() -> None:
     data = {
         "passed": False,
-        "recordId": "abc-123",
+        "record_id": "abc-123",
         "violations": [
-            {"invariantName": "dti_cap", "description": "DTI 0.50 exceeds cap", "severity": "error"}
+            {"invariant_name": "dti_cap", "description": "DTI 0.50 exceeds cap", "severity": "error"}
         ],
-        "leanVersion": "4.26.0",
+        "lean_version": "4.26.0",
     }
     result = _parse_output(json.dumps(data))
     assert result.passed is False
@@ -81,9 +81,9 @@ def test_verify_success(application_approvable) -> None:  # type: ignore[no-unty
     record = _make_record(application_approvable, RoutingOutcome.APPROVE)
     stdout = json.dumps({
         "passed": True,
-        "recordId": str(record.record_id),
+        "record_id": str(record.record_id),
         "violations": [],
-        "leanVersion": "4.26.0",
+        "lean_version": "4.26.0",
     })
 
     mock_proc = MagicMock()
@@ -106,11 +106,11 @@ def test_verify_violation_exit_1(application_approvable) -> None:  # type: ignor
     record = _make_record(application_approvable, RoutingOutcome.APPROVE)
     stdout = json.dumps({
         "passed": False,
-        "recordId": str(record.record_id),
+        "record_id": str(record.record_id),
         "violations": [
-            {"invariantName": "dti_cap", "description": "DTI exceeds cap", "severity": "error"}
+            {"invariant_name": "dti_cap", "description": "DTI exceeds cap", "severity": "error"}
         ],
-        "leanVersion": "4.26.0",
+        "lean_version": "4.26.0",
     })
 
     mock_proc = MagicMock()
