@@ -12,10 +12,20 @@ from datetime import UTC, datetime
 
 from pydantic import BaseModel, Field
 
-from verified_mortgage_agent.domain.enums import DocumentType, RoutingOutcome
-from verified_mortgage_agent.domain.models import MortgageApplication
+from verified_mortgage_agent.domain.enums import (
+    DocumentType,
+    RoutingOutcome,
+    SessionOutcome,
+)
+from verified_mortgage_agent.domain.models import (
+    ApplicantSituation,
+    MortgageApplication,
+    MortgageGoal,
+    MortgagePackageProposal,
+)
 
 SCHEMA_VERSION = "1.0.0"
+DESIGN_SESSION_SCHEMA_VERSION = "2.0.0"
 
 
 class ReasoningStep(BaseModel):
@@ -63,3 +73,39 @@ class DecisionRecord(BaseModel):
     generated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     # Model used by the authoritative (underwriter) agent
     model_id: str
+
+
+class DesignSessionRecord(BaseModel):
+    """Complete record of a Phase 4 generative design session.
+
+    Schema v2.0.0 — Python-only; the Lean binary never processes this type.
+    Every positive outcome is PENDING_REVIEW (requires human loan officer
+    sign-off); no path auto-approves.
+
+    ``verification_skipped=True`` means the Lean binary was unavailable during
+    the session.  A PENDING_REVIEW record with this flag set must not be treated
+    as conditionally approvable until Lean is re-run.
+    """
+
+    session_id: uuid.UUID = Field(default_factory=uuid.uuid4)
+    schema_version: str = DESIGN_SESSION_SCHEMA_VERSION
+    situation: ApplicantSituation
+    goal: MortgageGoal
+    # One entry per iteration
+    proposals: list[MortgagePackageProposal] = Field(default_factory=list)
+    # Lean violation strings per iteration (empty list = passed)
+    lean_feedback_history: list[list[str]] = Field(default_factory=list)
+    # package_reviewer concerns per iteration (empty list = no concerns)
+    reviewer_concerns_history: list[list[str]] = Field(default_factory=list)
+    final_outcome: SessionOutcome
+    # Set when final_outcome == PENDING_REVIEW
+    accepted_proposal: MortgagePackageProposal | None = None
+    # Set when final_outcome == HARD_BLOCK or DOCUMENTS_REQUIRED
+    block_reason: str | None = None
+    # Actionable steps for HARD_BLOCK / DOCUMENTS_REQUIRED outcomes
+    qualification_path: list[str] = Field(default_factory=list)
+    # Set when final_outcome == ESCALATED; summary for the senior underwriter
+    escalation_context: str | None = None
+    # True when the Lean binary was unavailable during the session
+    verification_skipped: bool = False
+    generated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))

@@ -1,0 +1,45 @@
+{
+  "record_id": "aaaaaaaa-aaaa-aaaa-aaaa-aa0000000004",
+  "schema_version": "1.0.0",
+  "application": {
+    "id": "bbbbbbbb-bbbb-bbbb-bbbb-bb0000000004",
+    "applicant": {
+      "name": "Ed Escalation",
+      "annual_income_usd": "90000",
+      "credit_score": 720,
+      "employment_status": "EMPLOYED",
+      "debt_obligations_monthly_usd": "1500"
+    },
+    "property": {
+      "address": "4 Escalation Ave",
+      "appraised_value_usd": "350000",
+      "property_type": "SINGLE_FAMILY"
+    },
+    "loan": {
+      "principal_usd": "280000",
+      "term_years": 30,
+      "loan_type": "CONVENTIONAL",
+      "requested_rate_pct": null
+    },
+    "submitted_at": "2026-01-15T10:00:00.000000Z",
+    "provided_documents": ["GOVERNMENT_ID", "PAY_STUB", "TAX_RETURN", "BANK_STATEMENT"]
+  },
+  "decisions": [
+    {
+      "decision_id": "cccccccc-cccc-cccc-cccc-cc0000000004",
+      "application_id": "bbbbbbbb-bbbb-bbbb-bbbb-bb0000000004",
+      "agent_name": "underwriter",
+      "outcome": "ESCALATE_TO_UNDERWRITER",
+      "reasoning_steps": [],
+      "confidence_score": 0.6,
+      "documents_requested": [],
+      "escalation_reason": null,
+      "decided_at": "2026-01-15T10:00:01.000000Z",
+      "model_id": "anthropic/claude-sonnet-4-6"
+    }
+  ],
+  "routing_steps": [],
+  "final_outcome": "ESCALATE_TO_UNDERWRITER",
+  "generated_at": "2026-01-15T10:00:01.000000Z",
+  "model_id": "anthropic/claude-sonnet-4-6"
+}

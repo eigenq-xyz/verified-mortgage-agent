@@ -1,0 +1,7 @@
+{
+  "target_property_price": "450000",
+  "available_down_payment": "45000",
+  "desired_max_monthly_payment": "2200",
+  "ownership_horizon_years": 10,
+  "priority": "MINIMIZE_MONTHLY_PAYMENT"
+}

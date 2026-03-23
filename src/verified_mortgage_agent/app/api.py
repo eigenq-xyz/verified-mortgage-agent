@@ -1,7 +1,8 @@
 """FastAPI application for the verified mortgage agent.
 
 Endpoints:
-  POST /applications/process   — run the full pipeline
+  POST /applications/process   — run the full v1 pipeline
+  POST /applications/design    — run the Phase 4 generative design loop
   POST /records/verify         — run the Lean verifier on an existing record
   GET  /schema                 — return the DecisionRecord JSON schema
   GET  /health                 — liveness check
@@ -12,9 +13,13 @@ from __future__ import annotations
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-from verified_mortgage_agent.domain.models import MortgageApplication
+from verified_mortgage_agent.domain.models import (
+    ApplicantSituation,
+    MortgageApplication,
+    MortgageGoal,
+)
 from verified_mortgage_agent.lean_bridge.result import VerificationResult
-from verified_mortgage_agent.record.models import DecisionRecord
+from verified_mortgage_agent.record.models import DecisionRecord, DesignSessionRecord
 
 app = FastAPI(
     title="Verified Mortgage Agent",
@@ -75,6 +80,27 @@ async def process_application(request: ProcessRequest) -> ProcessResponse:
             pass
 
     return ProcessResponse(record=record, verification=verification)
+
+
+class DesignRequest(BaseModel):
+    situation: ApplicantSituation
+    goal: MortgageGoal
+    max_iterations: int = 3
+
+
+class DesignResponse(BaseModel):
+    record: DesignSessionRecord
+
+
+@app.post("/applications/design", response_model=DesignResponse)
+async def design_application(request: DesignRequest) -> DesignResponse:
+    """Run the Phase 4 generative design loop and return a DesignSessionRecord."""
+    from verified_mortgage_agent.orchestrator.runner import run_design_async
+
+    record = await run_design_async(
+        request.situation, request.goal, max_iterations=request.max_iterations
+    )
+    return DesignResponse(record=record)
 
 
 @app.post("/records/verify", response_model=VerifyResponse)

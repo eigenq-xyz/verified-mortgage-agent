@@ -1,0 +1,45 @@
+{
+  "record_id": "aaaaaaaa-aaaa-aaaa-aaaa-aa0000000016",
+  "schema_version": "1.0.0",
+  "application": {
+    "id": "bbbbbbbb-bbbb-bbbb-bbbb-bb0000000016",
+    "applicant": {
+      "name": "Fiona Floor",
+      "annual_income_usd": "60000",
+      "credit_score": 580,
+      "employment_status": "EMPLOYED",
+      "debt_obligations_monthly_usd": "2250"
+    },
+    "property": {
+      "address": "16 Floor St",
+      "appraised_value_usd": "250000",
+      "property_type": "SINGLE_FAMILY"
+    },
+    "loan": {
+      "principal_usd": "240000",
+      "term_years": 30,
+      "loan_type": "FHA",
+      "requested_rate_pct": null
+    },
+    "submitted_at": "2026-01-15T10:00:00.000000Z",
+    "provided_documents": ["GOVERNMENT_ID", "PAY_STUB", "TAX_RETURN", "BANK_STATEMENT"]
+  },
+  "decisions": [
+    {
+      "decision_id": "cccccccc-cccc-cccc-cccc-cc0000000016",
+      "application_id": "bbbbbbbb-bbbb-bbbb-bbbb-bb0000000016",
+      "agent_name": "underwriter",
+      "outcome": "APPROVE",
+      "reasoning_steps": [],
+      "confidence_score": 0.9,
+      "documents_requested": [],
+      "escalation_reason": null,
+      "decided_at": "2026-01-15T10:00:01.000000Z",
+      "model_id": "anthropic/claude-sonnet-4-6"
+    }
+  ],
+  "routing_steps": [],
+  "final_outcome": "APPROVE",
+  "generated_at": "2026-01-15T10:00:01.000000Z",
+  "model_id": "anthropic/claude-sonnet-4-6"
+}

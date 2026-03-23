@@ -27,3 +27,33 @@ class AgentResponse(BaseModel):
     confidence_score: float = Field(ge=0.0, le=1.0)
     documents_requested: list[DocumentType] = Field(default_factory=list)
     escalation_reason: str | None = None
+
+
+# ---------------------------------------------------------------------------
+# Phase 4 design-loop structured outputs
+# ---------------------------------------------------------------------------
+
+
+class PackageProposalOutput(BaseModel):
+    """Structured output from the package_designer agent."""
+
+    loan_type: str  # LoanType value — validated on conversion
+    principal_usd: str  # Decimal-safe string
+    term_years: int
+    estimated_rate_pct: str  # Decimal-safe string
+    rationale: str
+    customer_benefit: str
+    estimated_monthly_pi: str  # Decimal-safe string
+    special_considerations: list[str] = Field(default_factory=list)
+
+
+class PackageReviewOutput(BaseModel):
+    """Advisory output from the package_reviewer agent.
+
+    The graph always proceeds to lean_verify regardless of verdict.
+    """
+
+    verdict: str  # "ACCEPT" or "REVISE"
+    concerns: list[str] = Field(default_factory=list)
+    suggested_principal_usd: str | None = None  # Decimal-safe string or None
+    suggested_term_years: int | None = None
