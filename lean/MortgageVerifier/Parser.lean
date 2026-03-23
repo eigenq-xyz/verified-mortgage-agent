@@ -73,7 +73,26 @@ private def getOptFloat (j : Json) (key : String) : Except String (Option Float)
   match optLookup j key with
   | none | some .null => .ok none
   | some (.num n)     => .ok (some n.toFloat)
-  | some v            => .error s!"field '{key}' expected number or null, got {v}"
+  | some (.str s) =>
+    -- Pydantic serialises Decimal as a quoted number: parse it back via Json
+    match Lean.Json.parse s with
+    | .ok (.num n) => .ok (some n.toFloat)
+    | _            => .error s!"field '{key}' string '{s}' is not a valid number"
+  | some v => .error s!"field '{key}' expected number or null, got {v}"
+
+-- Optional numeric fields that default to 0 when absent (used for NJ/QM regulatory fields)
+private def getOptFloatDefault (j : Json) (key : String) : Except String Float := do
+  match ← getOptFloat j key with
+  | some v => .ok v
+  | none   => .ok 0.0
+
+private def getOptNatDefault (j : Json) (key : String) : Except String Nat :=
+  match optLookup j key with
+  | none | some .null => .ok 0
+  | some (.num n) =>
+    if n.exponent == 0 && n.mantissa >= 0 then .ok n.mantissa.toNat
+    else .error s!"field '{key}' not a non-negative integer (mantissa={n.mantissa}, exp={n.exponent})"
+  | some v => .error s!"field '{key}' expected number or null, got {v}"
 
 private def getArray (j : Json) (key : String) : Except String (Array Json) := do
   match ← getField j key with
@@ -155,10 +174,17 @@ private def parseProperty (j : Json) : Except String Property := do
 
 private def parseLoanRequest (j : Json) : Except String LoanRequest := do
   return {
-    principalUsd     := ← getFloat j "principal_usd"
-    termYears        := ← getNat   j "term_years"
-    loanType         := ← parseLoanType (← getString j "loan_type")
-    requestedRatePct := ← getOptFloat j "requested_rate_pct"
+    principalUsd            := ← getFloat          j "principal_usd"
+    termYears               := ← getNat             j "term_years"
+    loanType                := ← parseLoanType (← getString j "loan_type")
+    requestedRatePct        := ← getOptFloat        j "requested_rate_pct"
+    -- NJ regulatory / federal compliance fields (default 0 when absent)
+    discountPointsPct       := ← getOptFloatDefault j "discount_points_pct"
+    totalPointsAndFeesPct   := ← getOptFloatDefault j "total_points_and_fees_pct"
+    lateChargePct           := ← getOptFloatDefault j "late_charge_pct"
+    prepaymentPenaltyMonths := ← getOptNatDefault   j "prepayment_penalty_months"
+    financedPointsUsd       := ← getOptFloatDefault j "financed_points_usd"
+    aprPct                  := ← getOptFloatDefault j "apr_pct"
   }
 
 private def parseMortgageApplication (j : Json) : Except String MortgageApplication := do

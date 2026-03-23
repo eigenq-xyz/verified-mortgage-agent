@@ -57,6 +57,22 @@ private def violationName (msg : String) : String :=
   else if msg.startsWith "ESCALATE" then "escalationRequiresReason"
   else if msg.startsWith "final_outcome" || msg.startsWith "Record has no"
                                     then "finalOutcomeConsistency"
+  -- NJ regulatory / federal QM invariants
+  else if msg.startsWith "Discount points"   then "discountPointsCap"
+  else if msg.startsWith "Late charge"       then "lateChargeCap"
+  else if msg.startsWith "High-cost home loan" && strHas msg "underwriter review"
+                                             then "highCostLoanMustEscalate"
+  else if msg.startsWith "Loan fees" && strHas msg "covered home loan"
+                                             then "coveredHomeLoanFeeCheck"
+  else if msg.startsWith "High-cost home loan" && strHas msg "prepayment penalty"
+                                             then "prepaymentPenaltyOnHighCost"
+  else if msg.startsWith "High-cost home loan" && strHas msg "finances $"
+                                             then "financedPointsOnHighCost"
+  else if msg.startsWith "Unemployed"        then "unemployedApplicantRequiresEscalation"
+  else if msg.startsWith "JUMBO-labelled"    then "jumboConformingLimitCheck"
+  else if msg.startsWith "Loan fees" && strHas msg "QM points-and-fees"
+                                             then "qmPointsAndFeesCap"
+  else if msg.startsWith "APR spread"        then "qmAprSpreadCheck"
   else "unknown_invariant"
 
 -- ---------------------------------------------------------------------------

@@ -1,0 +1,51 @@
+{
+  "record_id": "aaaaaaaa-aaaa-aaaa-aaaa-aa0000000022",
+  "schema_version": "1.0.0",
+  "application": {
+    "id": "bbbbbbbb-bbbb-bbbb-bbbb-bb0000000022",
+    "applicant": {
+      "name": "Helen Highcost",
+      "annual_income_usd": "72000",
+      "credit_score": 620,
+      "employment_status": "EMPLOYED",
+      "debt_obligations_monthly_usd": "1500"
+    },
+    "property": {
+      "address": "22 HOSA Highway, Camden, NJ",
+      "appraised_value_usd": "220000",
+      "property_type": "SINGLE_FAMILY"
+    },
+    "loan": {
+      "principal_usd": "200000",
+      "term_years": 30,
+      "loan_type": "CONVENTIONAL",
+      "requested_rate_pct": null,
+      "discount_points_pct": 2.0,
+      "total_points_and_fees_pct": 0.062,
+      "late_charge_pct": 0.05,
+      "prepayment_penalty_months": 12,
+      "financed_points_usd": 3000,
+      "apr_pct": 0.095
+    },
+    "submitted_at": "2026-01-15T10:00:00.000000Z",
+    "provided_documents": ["GOVERNMENT_ID", "PAY_STUB", "TAX_RETURN"]
+  },
+  "decisions": [
+    {
+      "decision_id": "cccccccc-cccc-cccc-cccc-cc0000000022",
+      "application_id": "bbbbbbbb-bbbb-bbbb-bbbb-bb0000000022",
+      "agent_name": "underwriter",
+      "outcome": "APPROVE",
+      "reasoning_steps": [],
+      "confidence_score": 0.75,
+      "documents_requested": [],
+      "escalation_reason": null,
+      "decided_at": "2026-01-15T10:00:01.000000Z",
+      "model_id": "anthropic/claude-sonnet-4-6"
+    }
+  ],
+  "routing_steps": [],
+  "final_outcome": "APPROVE",
+  "generated_at": "2026-01-15T10:00:01.000000Z",
+  "model_id": "anthropic/claude-sonnet-4-6"
+}

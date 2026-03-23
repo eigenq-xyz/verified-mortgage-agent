@@ -38,6 +38,13 @@ class LoanRequest(BaseModel):
     term_years: int = Field(ge=1, le=30)
     loan_type: LoanType
     requested_rate_pct: Decimal | None = Field(default=None, ge=0, le=100)
+    # NJ regulatory / federal compliance fields (optional — default 0 when absent)
+    discount_points_pct: Decimal = Field(default=Decimal("0"), ge=0)
+    total_points_and_fees_pct: Decimal = Field(default=Decimal("0"), ge=0)
+    late_charge_pct: Decimal = Field(default=Decimal("0"), ge=0)
+    prepayment_penalty_months: int = Field(default=0, ge=0)
+    financed_points_usd: Decimal = Field(default=Decimal("0"), ge=0)
+    apr_pct: Decimal = Field(default=Decimal("0"), ge=0)
 
     @field_validator("term_years")
     @classmethod

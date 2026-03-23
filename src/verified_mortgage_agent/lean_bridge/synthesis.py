@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import uuid
 from datetime import UTC, datetime
+from decimal import Decimal
 
 from verified_mortgage_agent.domain.enums import PropertyType, RoutingOutcome
 from verified_mortgage_agent.domain.models import (
@@ -67,6 +68,13 @@ def synthesize_record_from_proposal(
         term_years=proposal.term_years,
         loan_type=proposal.loan_type,
         requested_rate_pct=None,
+        # NJ regulatory fields default to 0 in synthesis — not carried by proposals
+        discount_points_pct=Decimal("0"),
+        total_points_and_fees_pct=Decimal("0"),
+        late_charge_pct=Decimal("0"),
+        prepayment_penalty_months=0,
+        financed_points_usd=Decimal("0"),
+        apr_pct=Decimal("0"),
     )
 
     application_id = uuid.uuid4()
