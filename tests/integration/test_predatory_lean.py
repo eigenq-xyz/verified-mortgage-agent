@@ -207,6 +207,81 @@ _CASES = [
         "Float boundary: DTI 0.4290 is unambiguously below the 0.43 cap.",
         id="valid_conventional_borderline_dti",
     ),
+    # -------------------------------------------------------------------------
+    # Category 5 — NJ Regulatory Invariants (Phase 5)
+    # -------------------------------------------------------------------------
+    pytest.param(
+        "nj_discount_points_excess.json",
+        False,
+        ["discountPoints"],
+        "N.J.S.A. 17:11C-28(a)(1): discount points 3.5 exceed the 3-point cap "
+        "on secondary-mortgage approval.",
+        id="nj_discount_points_excess",
+    ),
+    pytest.param(
+        "nj_late_charge_excess.json",
+        False,
+        ["lateCharge"],
+        "N.J.S.A. 17:11C-28(c): late charge rate 6% exceeds the 5% statutory cap.",
+        id="nj_late_charge_excess",
+    ),
+    pytest.param(
+        "nj_high_cost_loan_direct_approve.json",
+        False,
+        ["highCost"],
+        "C.46:10B-24 (NJ HOSA): total fees 6.2% > 5% on a $200K loan — high-cost "
+        "home loan requires underwriter review before direct approval.",
+        id="nj_high_cost_loan_direct_approve",
+    ),
+    pytest.param(
+        "nj_covered_loan_no_disclosure.json",
+        False,
+        ["coveredHome"],
+        "N.J.A.C. 3:25-1.1: fees 4.5% fall in the 4–5% covered-home-loan tier "
+        "requiring additional disclosures before approval.",
+        id="nj_covered_loan_no_disclosure",
+    ),
+    pytest.param(
+        "nj_unemployed_direct_approve.json",
+        False,
+        ["unemployed"],
+        "N.J.A.C. 3:1-16.2 / CFPB ATR: unemployed applicant cannot receive "
+        "direct algorithmic approval without human underwriter sign-off.",
+        id="nj_unemployed_direct_approve",
+    ),
+    pytest.param(
+        "nj_jumbo_below_fhfa_limit.json",
+        False,
+        ["jumboConforming"],
+        "FHFA 2025: $700K loan labelled JUMBO does not exceed the $806,500 "
+        "conforming limit — loan type label is incorrect.",
+        id="nj_jumbo_below_fhfa_limit",
+    ),
+    pytest.param(
+        "qm_fees_above_3pct.json",
+        False,
+        ["qmPoints"],
+        "12 CFR 1026.43(e)(3): total fees 4% > 3% QM cap on a $380K loan — "
+        "loan is non-QM and requires escalation.",
+        id="qm_fees_above_3pct",
+    ),
+    pytest.param(
+        "qm_apr_spread_excess.json",
+        False,
+        ["qmApr"],
+        "12 CFR 1026.43(e)(2)(vi): APR spread 2.5% ≥ 225 bps on $340K loan — "
+        "non-QM status requires ATR escalation.",
+        id="qm_apr_spread_excess",
+    ),
+    pytest.param(
+        "valid_nj_compliant_conventional.json",
+        True,
+        [],
+        "Regression: fully NJ-compliant CONVENTIONAL approval — discount points 1.0 ≤ 3, "
+        "fees 2% < 3% QM cap, late charge 4% < 5%, APR spread 0.3% < 225 bps. "
+        "Must not over-block.",
+        id="valid_nj_compliant_conventional",
+    ),
 ]
 
 
